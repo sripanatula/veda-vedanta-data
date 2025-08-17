@@ -1,0 +1,8 @@
+/vv/data/*
+  Access-Control-Allow-Origin: *
+  Cache-Control: no-store
+
+/vv/manifests/*
+  Access-Control-Allow-Origin: *
+  Cache-Control: no-store
+
