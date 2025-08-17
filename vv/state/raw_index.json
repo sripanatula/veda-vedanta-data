@@ -80,6 +80,41 @@
       "sha256": "a6ac4dcb6348b6ecdacef5cb8edcf36046ae501a63c73f7b5d06b8a1c7cfddf0",
       "verse": 16,
       "target": "verse-016.json"
+    },
+    "verse-017.txt": {
+      "sha256": "8eca60ef7c00a7fb7e4e45655c560fc183c33bb89bfc0a607a98aab25fd7dd80",
+      "verse": 17,
+      "target": "verse-017.json"
+    },
+    "verse-018.txt": {
+      "sha256": "f3001b5f3b596a43954a71cec5a766d704413c0c1b5db152f0ea7fb5856905d3",
+      "verse": 18,
+      "target": "verse-018.json"
+    },
+    "verse-019.txt": {
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "verse": 19,
+      "target": "verse-019.json"
+    },
+    "verse-020.txt": {
+      "sha256": "357a0bc8251a3bccf5865a1e2ff0cd2f13eea00dee866fb374756f529205e35d",
+      "verse": 20,
+      "target": "verse-020.json"
+    },
+    "verse-021.txt": {
+      "sha256": "7b3fe5efbe8d2afdf4615b7a4d25d41ac47b436c3b2a2924e414c6155393d7cc",
+      "verse": 21,
+      "target": "verse-021.json"
+    },
+    "verse-023.txt": {
+      "sha256": "e90d6142451a70443574eda08a4f4dd267eb03ab33965146985b58039573e551",
+      "verse": 23,
+      "target": "verse-023.json"
+    },
+    "verse-024.txt": {
+      "sha256": "c0b795f0a051c60a35ea396f6db0a9593fba40b1094b0aeb1910ad6c4f2a192f",
+      "verse": 24,
+      "target": "verse-024.json"
     }
   }
 }
