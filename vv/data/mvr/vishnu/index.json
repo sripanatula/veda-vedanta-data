@@ -1,0 +1,70 @@
+{
+  "collection": "mvr/vishnu",
+  "count": 16,
+  "items": [
+    {
+      "file": "verse-001.json",
+      "verse": 1
+    },
+    {
+      "file": "verse-002.json",
+      "verse": 2
+    },
+    {
+      "file": "verse-003.json",
+      "verse": 3
+    },
+    {
+      "file": "verse-004.json",
+      "verse": 4
+    },
+    {
+      "file": "verse-005.json",
+      "verse": 5
+    },
+    {
+      "file": "verse-006.json",
+      "verse": 6
+    },
+    {
+      "file": "verse-007.json",
+      "verse": 7
+    },
+    {
+      "file": "verse-008.json",
+      "verse": 8
+    },
+    {
+      "file": "verse-009.json",
+      "verse": 9
+    },
+    {
+      "file": "verse-010.json",
+      "verse": 10
+    },
+    {
+      "file": "verse-011.json",
+      "verse": 11
+    },
+    {
+      "file": "verse-012.json",
+      "verse": 12
+    },
+    {
+      "file": "verse-013.json",
+      "verse": 13
+    },
+    {
+      "file": "verse-014.json",
+      "verse": 14
+    },
+    {
+      "file": "verse-015.json",
+      "verse": 15
+    },
+    {
+      "file": "verse-016.json",
+      "verse": 16
+    }
+  ]
+}

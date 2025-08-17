@@ -1,0 +1,85 @@
+{
+  "last_parsed_commit": "",
+  "files": {
+    "verse-001.txt": {
+      "sha256": "e5f1b8d720780aa281465eb8d0411724dc26a5fead50d99c10df3b445a5839bf",
+      "verse": 1,
+      "target": "verse-001.json"
+    },
+    "verse-002.txt": {
+      "sha256": "cc3f8fa1fa8b2fb4f0c7fa7701681ebf1c176b546fb0b5cd651392e2836d9626",
+      "verse": 2,
+      "target": "verse-002.json"
+    },
+    "verse-003.txt": {
+      "sha256": "f7644f24d0a52e5afc3d3e7fc49c8d053941202dd885501e0d9f9d69c42c07ba",
+      "verse": 3,
+      "target": "verse-003.json"
+    },
+    "verse-004.txt": {
+      "sha256": "88a631f5a1d8f92ffd98e20b012b0cb0f96cf9a5e8b7946c57947808a677fe78",
+      "verse": 4,
+      "target": "verse-004.json"
+    },
+    "verse-005.txt": {
+      "sha256": "6265b6a1bf1f3388681bb2747ec28359d041b0df691effaff10268f059325c8e",
+      "verse": 5,
+      "target": "verse-005.json"
+    },
+    "verse-006.txt": {
+      "sha256": "8e8564a4f5a6076846f2f9f935e5847da685a7e69161e67ad37d21dbd026b5ec",
+      "verse": 6,
+      "target": "verse-006.json"
+    },
+    "verse-007.txt": {
+      "sha256": "b46345c7eff0859c9ea000638df6c83f743b408fee9c5099c9cecf38623185ed",
+      "verse": 7,
+      "target": "verse-007.json"
+    },
+    "verse-008.txt": {
+      "sha256": "bbc417f73597acd970f35ed948fde04bc7394b0e554e31019600d7d38ffdf861",
+      "verse": 8,
+      "target": "verse-008.json"
+    },
+    "verse-009.txt": {
+      "sha256": "d270fa519082d447016a954c36407580ed088299c03d08d753a50d22dd0bb355",
+      "verse": 9,
+      "target": "verse-009.json"
+    },
+    "verse-010.txt": {
+      "sha256": "a56227e14c0c47c42e5fa8fe2f1c37719f2c9575ab67cfc63c74f5b9c983c27c",
+      "verse": 10,
+      "target": "verse-010.json"
+    },
+    "verse-011.txt": {
+      "sha256": "6c304ebbd256d73e944186040b98d9cbaa5d70a52b3c1d95cb134b204205e38e",
+      "verse": 11,
+      "target": "verse-011.json"
+    },
+    "verse-012.txt": {
+      "sha256": "8c3ab127e06b6b99a1edf92b1750c4a80ddffad9f639b5a7c3abbb143ab85ebf",
+      "verse": 12,
+      "target": "verse-012.json"
+    },
+    "verse-013.txt": {
+      "sha256": "c2d3ebedc67a03d366cca859200011150504e51404b5f2964652b458ebb87c26",
+      "verse": 13,
+      "target": "verse-013.json"
+    },
+    "verse-014.txt": {
+      "sha256": "c355d5129199b413db26c50e00e10ec16c4c33de749c45b4a7375d026c999b10",
+      "verse": 14,
+      "target": "verse-014.json"
+    },
+    "verse-015.txt": {
+      "sha256": "f3001b5f3b596a43954a71cec5a766d704413c0c1b5db152f0ea7fb5856905d3",
+      "verse": 15,
+      "target": "verse-015.json"
+    },
+    "verse-016.txt": {
+      "sha256": "a6ac4dcb6348b6ecdacef5cb8edcf36046ae501a63c73f7b5d06b8a1c7cfddf0",
+      "verse": 16,
+      "target": "verse-016.json"
+    }
+  }
+}
