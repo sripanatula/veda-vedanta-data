@@ -1,42 +1,32 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-update_from_raw.py  —  Build/refresh the vv-data "DB" from raw_data.
+update_from_raw.py — Build/refresh the vv-data "DB" from raw_data.
 
-Overview
---------
+What this does
+--------------
 - Reads settings from tools/config.env (no hardcoded paths).
 - Detects changed raw files (by SHA256) and parses only those.
+- Optional: reprocess ALL files with --force-all (useful after parser changes).
 - Writes verse JSON to vv/data/<source>/<collection>/verse-XXX.json.
 - Rebuilds vv/data/.../index.json (count + file list).
 - Updates vv/manifests/<MANIFEST_NAME> with { base, total, last_updated }.
 - Tracks processed raw files in vv/state/raw_index.json.
-- Optionally writes a Cloudflare Pages _headers file (CORS + no-store).
-- Optionally git add/commit (and push) in the vv-data repo.
+- Optional: writes Cloudflare Pages _headers (CORS + no-store).
+- Optional: git add/commit (and push) in the vv-data repo.
 
-Run
----
-From repo root (veda-vedanta-data):
+Run (from repo root: veda-vedanta-data)
+---------------------------------------
     python3 tools/update_from_raw.py --dry-run
     python3 tools/update_from_raw.py
+    python3 tools/update_from_raw.py --force-all
     python3 tools/update_from_raw.py --config tools/alt.env --push
 
-Config precedence (highest -> lowest):
+Config precedence (highest -> lowest)
+-------------------------------------
     1) --config path
     2) env var VVEDATA_CONFIG
     3) tools/config.env (default)
-
-Expected keys in config.env (example):
-    RAW_DIR=../veda-vedanta-raw/raw_data/mvr/vishnu
-    DATA_DIR=.
-    BASE=/vv/data/mvr/vishnu
-    COLLECTION=mvr/vishnu
-    PARSER=./tools/parsers/mvr_vishnu_adapter.py
-    MANIFEST_NAME=vishnu.json
-    INDEX_NAME=index.json
-    WRITE_HEADERS=true
-    GIT_AUTOCOMMIT=true
-    GIT_AUTOPUSH=false
 """
 
 import argparse
@@ -48,11 +38,11 @@ import re
 import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, Any, Tuple
+from typing import Dict, Any, Tuple, Optional, List
 
 # ---------------------------- Config helpers ----------------------------
 
-def _parse_bool(s: str | None, default: bool = False) -> bool:
+def _parse_bool(s: Optional[str], default: bool = False) -> bool:
     if s is None:
         return default
     return s.strip().lower() in {"1", "true", "yes", "y", "on"}
@@ -70,7 +60,7 @@ def _load_env_file(path: Path) -> Dict[str, str]:
         out[k.strip()] = v.strip()
     return out
 
-def load_config(repo_root: Path, explicit: Path | None) -> Dict[str, Any]:
+def load_config(repo_root: Path, explicit: Optional[Path]) -> Dict[str, Any]:
     """
     Load config from:
       1) explicit path (if provided),
@@ -86,23 +76,23 @@ def load_config(repo_root: Path, explicit: Path | None) -> Dict[str, Any]:
 
     raw = _load_env_file(cfg_path)
 
-    def resolve_path(val: str, default_rel: str) -> Path:
-        p = Path(val or default_rel)
+    def resolve_path(val: Optional[str], default_rel: str) -> Path:
+        p = Path((val or default_rel))
         return (repo_root / p).resolve() if not p.is_absolute() else p
 
     cfg: Dict[str, Any] = {
-        "RAW_DIR":       resolve_path(raw.get("RAW_DIR", "../veda-vedanta-raw/raw_data/mvr/vishnu"), "../veda-vedanta-raw/raw_data/mvr/vishnu"),
-        "DATA_DIR":      resolve_path(raw.get("DATA_DIR", "."), "."),
-        "BASE":          raw.get("BASE", "/vv/data/mvr/vishnu").strip("/"),
-        "COLLECTION":    raw.get("COLLECTION", "mvr/vishnu"),
-        "PARSER":        resolve_path(raw.get("PARSER", "./tools/parsers/mvr_vishnu_adapter.py"), "./tools/parsers/mvr_vishnu_adapter.py"),
-        "MANIFEST_NAME": raw.get("MANIFEST_NAME", "vishnu.json"),
-        "INDEX_NAME":    raw.get("INDEX_NAME", "index.json"),
-        "WRITE_HEADERS": _parse_bool(raw.get("WRITE_HEADERS", "true")),
-        "GIT_AUTOCOMMIT":_parse_bool(raw.get("GIT_AUTOCOMMIT", "true")),
-        "GIT_AUTOPUSH":  _parse_bool(raw.get("GIT_AUTOPUSH", "false")),
-        "STATE_PATH":    resolve_path(raw.get("STATE_PATH", "vv/state/raw_index.json"), "vv/state/raw_index.json"),
-        "HEADERS_PATH":  resolve_path(raw.get("HEADERS_PATH", "_headers"), "_headers"),
+        "RAW_DIR":       resolve_path(raw.get("RAW_DIR"), "../veda-vedanta-raw/raw_data/mvr/vishnu"),
+        "DATA_DIR":      resolve_path(raw.get("DATA_DIR"), "."),
+        "BASE":          (raw.get("BASE") or "/vv/data/mvr/vishnu").strip("/"),
+        "COLLECTION":    raw.get("COLLECTION") or "mvr/vishnu",
+        "PARSER":        resolve_path(raw.get("PARSER"), "./tools/parsers/mvr_vishnu_adapter.py"),
+        "MANIFEST_NAME": raw.get("MANIFEST_NAME") or "vishnu.json",
+        "INDEX_NAME":    raw.get("INDEX_NAME") or "index.json",
+        "WRITE_HEADERS": _parse_bool(raw.get("WRITE_HEADERS"), True),
+        "GIT_AUTOCOMMIT":_parse_bool(raw.get("GIT_AUTOCOMMIT"), True),
+        "GIT_AUTOPUSH":  _parse_bool(raw.get("GIT_AUTOPUSH"), False),
+        "STATE_PATH":    resolve_path(raw.get("STATE_PATH"), "vv/state/raw_index.json"),
+        "HEADERS_PATH":  resolve_path(raw.get("HEADERS_PATH"), "_headers"),
     }
     return cfg
 
@@ -195,6 +185,7 @@ def main():
     ap.add_argument("--config", help="Path to config.env (defaults to tools/config.env)")
     ap.add_argument("--dry-run", action="store_true", help="Parse & report; do not write files")
     ap.add_argument("--push", action="store_true", help="Force git push after commit (overrides config)")
+    ap.add_argument("--force-all", action="store_true", help="Reprocess ALL raw files (ignore state)")
     args = ap.parse_args()
 
     # Determine repo root from this script location (robust if run from anywhere)
@@ -230,7 +221,7 @@ def main():
     parser_mod = load_parser(PARSER)
 
     # Discover candidate raw files
-    candidates: list[tuple[int | None, Path]] = []
+    candidates: List[Tuple[Optional[int], Path]] = []
     for p in sorted(RAW_DIR.glob("*")):
         if p.is_file() and VERSE_RE.search(p.name):
             m = VERSE_RE.search(p.name)
@@ -242,10 +233,13 @@ def main():
 
     state = load_state(state_path)
 
-    # Delta detection by SHA256
-    changed: list[tuple[int | None, Path, str, str]] = []
+    # Delta detection by SHA256 (or force-all)
+    changed: List[Tuple[Optional[int], Path, str, str]] = []
     for n, src in candidates:
         rel = str(src.relative_to(RAW_DIR))
+        if args.force_all:
+            changed.append((n, src, rel, "FORCED"))
+            continue
         digest = sha256_file(src)
         prev = state["files"].get(rel, {}).get("sha256")
         if prev != digest:
@@ -255,9 +249,9 @@ def main():
         print("No changes detected. Nothing to do.")
         return
     else:
-        print(f"{len(changed)} file(s) changed: {[rel for _,_,rel,_ in changed]}")
+        print(f"{len(changed)} file(s) to process: {[rel for _,_,rel,_ in changed]}")
 
-    # Process only changed items
+    # Process changed items
     total_written = 0
     for n, src, rel, digest in changed:
         verse_num = n if n is not None else None

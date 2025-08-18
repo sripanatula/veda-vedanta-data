@@ -1,46 +1,71 @@
-
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-Adapter for MVR Vishnu raw verse files -> normalized JSON.
-Expected to be passed to update_from_raw.py via --parser path.
-Replace the parse_file() body to call your real extract_data functions if you prefer.
+mvr_vishnu_adapter.py — Raw -> JSON adapter for MVR Vishnu verses.
+
+Consistent with your original splitter rules:
+- Telugu wins if present on a line  -> "te"
+- Else English wins over Sanskrit   -> "en"
+- Else Sanskrit if Devanagari found -> "sa"
+- If none detected, stick with current bucket; default to Sanskrit ("sa").
+- Lines of only dashes (-----) create paragraph breaks in the current bucket.
 """
+
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List, Optional
+import re
+
+RE_TEL = re.compile(r"[\u0C00-\u0C7F]")   # Telugu
+RE_DEV = re.compile(r"[\u0900-\u097F]")   # Devanagari (Sanskrit/Hindi)
+RE_LAT = re.compile(r"[A-Za-z]")          # English (ASCII letters)
+SEP_LINE = re.compile(r"^\s*-{3,}\s*$")   # lines of only dashes
+BLANK = re.compile(r"^\s*$")
+
+def detect_language(line: str) -> Optional[str]:
+    if RE_TEL.search(line):
+        return "te"
+    if RE_LAT.search(line):               # English takes precedence over Sanskrit
+        return "en"
+    if RE_DEV.search(line):
+        return "sa"
+    return None
 
 def parse_file(path: Path) -> Dict:
-    # Minimal example:
-    # Heuristic: try to split by lines with markers 'sa:', 'te:', 'en:'.
-    # If not present, put entire file under 'sa' and leave others empty.
-    text = path.read_text(encoding='utf-8').strip()
-    sa, te, en = "", "", ""
-    # Try very simple parsing
-    cur = None
-    for line in text.splitlines():
-        l = line.strip()
-        low = l.lower()
-        if low.startswith('sa:'):
-            cur = 'sa'; sa += l[3:].strip() + '\n'
-        elif low.startswith('te:'):
-            cur = 'te'; te += l[3:].strip() + '\n'
-        elif low.startswith('en:'):
-            cur = 'en'; en += l[3:].strip() + '\n'
-        else:
-            if cur == 'sa':
-                sa += l + '\n'
-            elif cur == 'te':
-                te += l + '\n'
-            elif cur == 'en':
-                en += l + '\n'
-            else:
-                sa += l + '\n'  # default bucket
+    text = path.read_text(encoding="utf-8").replace("\r\n", "\n")
+    sa: List[str] = []
+    te: List[str] = []
+    en: List[str] = []
+    current: Optional[str] = None  # last chosen bucket
 
-    def clean(s: str) -> str:
-        return s.strip()
+    def put(bucket: str, line: str):
+        if bucket == "sa": sa.append(line)
+        elif bucket == "te": te.append(line)
+        else: en.append(line)
 
-    obj = {
-        "sa": clean(sa),
-        "te": clean(te),
-        "en": clean(en),
+    for raw in text.split("\n"):
+        line = raw.rstrip()
+
+        if SEP_LINE.match(line):
+            if current:
+                put(current, "")          # paragraph break in the active bucket
+            continue
+
+        if BLANK.match(line):
+            if current:
+                put(current, "")
+            continue
+
+        bucket = detect_language(line) or current or "sa"
+        put(bucket, line)
+        current = bucket
+
+    def join_clean(parts: List[str]) -> str:
+        s = "\n".join(parts).strip()
+        # collapse 3+ blank lines to 2 to avoid excessive spacing
+        return re.sub(r"\n{3,}", "\n\n", s)
+
+    return {
+        "sa": join_clean(sa),
+        "te": join_clean(te),
+        "en": join_clean(en),
     }
-    return obj
