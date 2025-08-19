@@ -130,6 +130,11 @@
       "sha256": "1493edcb5840c9cdc64c9d576b001aa91f9f9ea675bc75416f0fc8ffdf8dd4a3",
       "verse": 26,
       "target": "verse-026.json"
+    },
+    "verse-027.txt": {
+      "sha256": "6e828e04a2d7bbd724ed238237c69c867b6f1efe7e28f2c2f91920561ed3ca3b",
+      "verse": 27,
+      "target": "verse-027.json"
     }
   }
 }
