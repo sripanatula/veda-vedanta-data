@@ -125,6 +125,11 @@
       "sha256": "b672442503d953cc6a36929705b30949137495055e6873edea1969d7ddd68409",
       "verse": 25,
       "target": "verse-025.json"
+    },
+    "verse-026.txt": {
+      "sha256": "1493edcb5840c9cdc64c9d576b001aa91f9f9ea675bc75416f0fc8ffdf8dd4a3",
+      "verse": 26,
+      "target": "verse-026.json"
     }
   }
 }
