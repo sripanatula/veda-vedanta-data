@@ -235,6 +235,11 @@
       "sha256": "d91e01fa9ebf9249b09522e5fcd5f06fa51c0869d40d69bac2f4ea783482b3e8",
       "verse": 47,
       "target": "verse-047.json"
+    },
+    "verse-048.txt": {
+      "sha256": "7d41bc7872d4df55939f3758f0f7312c61a002c32cb60bd46e4b39635f34c4f1",
+      "verse": 48,
+      "target": "verse-048.json"
     }
   }
 }
