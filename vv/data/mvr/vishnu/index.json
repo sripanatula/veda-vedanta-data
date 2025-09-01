@@ -1,6 +1,6 @@
 {
   "collection": "mvr/vishnu",
-  "count": 50,
+  "count": 51,
   "items": [
     {
       "file": "verse-001.json",
@@ -201,6 +201,10 @@
     {
       "file": "verse-050.json",
       "verse": 50
+    },
+    {
+      "file": "verse-051.json",
+      "verse": 51
     }
   ]
 }
