@@ -345,6 +345,11 @@
       "sha256": "76073278d9ae713db59fdf4b20f27bda59677b6ee2ec6eb72d5c48130f56ed02",
       "verse": 58,
       "target": "name-058.json"
+    },
+    "name-059.txt": {
+      "sha256": "5eec1d6755481d12fc841944f55f115a35237f469d38aa42d950e01eb5f9c6b1",
+      "verse": 59,
+      "target": "name-059.json"
     }
   }
 }
