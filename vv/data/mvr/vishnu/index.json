@@ -1,258 +1,390 @@
 {
   "collection": "mvr/vishnu",
-  "count": 63,
+  "count": 64,
   "items": [
     {
       "file": "verse-001.json",
+      "type": "verse",
+      "id": 1,
       "verse": 1
     },
     {
       "file": "verse-002.json",
+      "type": "verse",
+      "id": 2,
       "verse": 2
     },
     {
       "file": "verse-003.json",
+      "type": "verse",
+      "id": 3,
       "verse": 3
     },
     {
       "file": "verse-004.json",
+      "type": "verse",
+      "id": 4,
       "verse": 4
     },
     {
       "file": "verse-005.json",
+      "type": "verse",
+      "id": 5,
       "verse": 5
     },
     {
       "file": "verse-006.json",
+      "type": "verse",
+      "id": 6,
       "verse": 6
     },
     {
       "file": "verse-007.json",
+      "type": "verse",
+      "id": 7,
       "verse": 7
     },
     {
       "file": "verse-008.json",
+      "type": "verse",
+      "id": 8,
       "verse": 8
     },
     {
       "file": "verse-009.json",
+      "type": "verse",
+      "id": 9,
       "verse": 9
     },
     {
       "file": "verse-010.json",
+      "type": "verse",
+      "id": 10,
       "verse": 10
     },
     {
       "file": "verse-011.json",
+      "type": "verse",
+      "id": 11,
       "verse": 11
     },
     {
       "file": "verse-012.json",
+      "type": "verse",
+      "id": 12,
       "verse": 12
     },
     {
       "file": "verse-013.json",
+      "type": "verse",
+      "id": 13,
       "verse": 13
     },
     {
       "file": "verse-014.json",
+      "type": "verse",
+      "id": 14,
       "verse": 14
     },
     {
       "file": "verse-015.json",
+      "type": "verse",
+      "id": 15,
       "verse": 15
     },
     {
       "file": "verse-016.json",
+      "type": "verse",
+      "id": 16,
       "verse": 16
     },
     {
       "file": "verse-017.json",
+      "type": "verse",
+      "id": 17,
       "verse": 17
     },
     {
       "file": "verse-018.json",
+      "type": "verse",
+      "id": 18,
       "verse": 18
     },
     {
       "file": "verse-019.json",
+      "type": "verse",
+      "id": 19,
       "verse": 19
     },
     {
       "file": "verse-020.json",
+      "type": "verse",
+      "id": 20,
       "verse": 20
     },
     {
       "file": "verse-021.json",
+      "type": "verse",
+      "id": 21,
       "verse": 21
     },
     {
       "file": "verse-022.json",
+      "type": "verse",
+      "id": 22,
       "verse": 22
     },
     {
       "file": "verse-023.json",
+      "type": "verse",
+      "id": 23,
       "verse": 23
     },
     {
       "file": "verse-024.json",
+      "type": "verse",
+      "id": 24,
       "verse": 24
     },
     {
       "file": "verse-025.json",
+      "type": "verse",
+      "id": 25,
       "verse": 25
     },
     {
       "file": "verse-026.json",
+      "type": "verse",
+      "id": 26,
       "verse": 26
     },
     {
       "file": "verse-027.json",
+      "type": "verse",
+      "id": 27,
       "verse": 27
     },
     {
       "file": "verse-028.json",
+      "type": "verse",
+      "id": 28,
       "verse": 28
     },
     {
       "file": "verse-029.json",
+      "type": "verse",
+      "id": 29,
       "verse": 29
     },
     {
       "file": "verse-030.json",
+      "type": "verse",
+      "id": 30,
       "verse": 30
     },
     {
       "file": "verse-031.json",
+      "type": "verse",
+      "id": 31,
       "verse": 31
     },
     {
       "file": "verse-032.json",
+      "type": "verse",
+      "id": 32,
       "verse": 32
     },
     {
       "file": "verse-033.json",
+      "type": "verse",
+      "id": 33,
       "verse": 33
     },
     {
       "file": "verse-034.json",
+      "type": "verse",
+      "id": 34,
       "verse": 34
     },
     {
       "file": "verse-035.json",
+      "type": "verse",
+      "id": 35,
       "verse": 35
     },
     {
       "file": "verse-036.json",
+      "type": "verse",
+      "id": 36,
       "verse": 36
     },
     {
       "file": "verse-037.json",
+      "type": "verse",
+      "id": 37,
       "verse": 37
     },
     {
       "file": "verse-038.json",
+      "type": "verse",
+      "id": 38,
       "verse": 38
     },
     {
       "file": "verse-039.json",
+      "type": "verse",
+      "id": 39,
       "verse": 39
     },
     {
       "file": "verse-040.json",
+      "type": "verse",
+      "id": 40,
       "verse": 40
     },
     {
       "file": "verse-041.json",
+      "type": "verse",
+      "id": 41,
       "verse": 41
     },
     {
       "file": "verse-042.json",
+      "type": "verse",
+      "id": 42,
       "verse": 42
     },
     {
       "file": "verse-043.json",
+      "type": "verse",
+      "id": 43,
       "verse": 43
     },
     {
       "file": "verse-044.json",
+      "type": "verse",
+      "id": 44,
       "verse": 44
     },
     {
       "file": "verse-045.json",
+      "type": "verse",
+      "id": 45,
       "verse": 45
     },
     {
       "file": "verse-046.json",
+      "type": "verse",
+      "id": 46,
       "verse": 46
     },
     {
       "file": "verse-047.json",
+      "type": "verse",
+      "id": 47,
       "verse": 47
     },
     {
       "file": "verse-048.json",
+      "type": "verse",
+      "id": 48,
       "verse": 48
     },
     {
       "file": "verse-049.json",
+      "type": "verse",
+      "id": 49,
       "verse": 49
     },
     {
       "file": "verse-050.json",
+      "type": "verse",
+      "id": 50,
       "verse": 50
     },
     {
       "file": "verse-051.json",
+      "type": "verse",
+      "id": 51,
       "verse": 51
     },
     {
       "file": "verse-052.json",
+      "type": "verse",
+      "id": 52,
       "verse": 52
     },
     {
       "file": "verse-053.json",
+      "type": "verse",
+      "id": 53,
       "verse": 53
     },
     {
       "file": "verse-054.json",
+      "type": "verse",
+      "id": 54,
       "verse": 54
     },
     {
       "file": "verse-055.json",
+      "type": "verse",
+      "id": 55,
       "verse": 55
     },
     {
       "file": "verse-056.json",
+      "type": "verse",
+      "id": 56,
       "verse": 56
     },
     {
       "file": "verse-057.json",
+      "type": "verse",
+      "id": 57,
       "verse": 57
     },
     {
       "file": "verse-058.json",
+      "type": "verse",
+      "id": 58,
       "verse": 58
     },
     {
       "file": "verse-059.json",
+      "type": "verse",
+      "id": 59,
       "verse": 59
     },
     {
       "file": "verse-060.json",
+      "type": "verse",
+      "id": 60,
       "verse": 60
     },
     {
       "file": "verse-061.json",
+      "type": "verse",
+      "id": 61,
       "verse": 61
     },
     {
       "file": "verse-062.json",
+      "type": "verse",
+      "id": 62,
       "verse": 62
     },
     {
       "file": "verse-063.json",
+      "type": "verse",
+      "id": 63,
       "verse": 63
+    },
+    {
+      "file": "name-052.json",
+      "type": "name",
+      "id": 52,
+      "nama": 52
     }
   ]
 }
