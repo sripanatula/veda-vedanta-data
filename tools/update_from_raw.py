@@ -98,7 +98,8 @@ def load_config(repo_root: Path, explicit: Optional[Path]) -> Dict[str, Any]:
 
 # ---------------------------- Utilities ----------------------------
 
-VERSE_RE = re.compile(r"verse[-_]?(\d+)\.(txt|md|json)$", re.IGNORECASE)
+# This regex now matches "verse-001.txt" and "name-052.txt"
+VERSE_RE = re.compile(r"(verse|name)-(\d+)\.(txt|md|json)$", re.IGNORECASE)
 
 def sha256_file(p: Path) -> str:
     h = hashlib.sha256()
@@ -224,8 +225,12 @@ def main():
     candidates: List[Tuple[Optional[int], Path]] = []
     for p in sorted(RAW_DIR.glob("*")):
         if p.is_file() and VERSE_RE.search(p.name):
-            m = VERSE_RE.search(p.name)
-            n = int(m.group(1)) if m else None
+            m = VERSE_RE.search(p.name) # e.g. ('verse', '1') or ('name', '52')
+            n = None
+            if m:
+                # group 2 is the number
+                num_str = m.group(2)
+                n = int(num_str) if num_str else None
             candidates.append((n, p))
     if not candidates:
         print(f"No verse files found in {RAW_DIR}")
@@ -259,12 +264,17 @@ def main():
             print(f"Skip unnumbered file: {rel}")
             continue
 
-        out_name = f"verse-{verse_num:03d}.json"
+        # Determine output name based on raw file's prefix ("verse" or "name")
+        raw_match = VERSE_RE.search(src.name)
+        prefix = "verse" # default
+        if raw_match:
+            prefix = raw_match.group(1).lower()
+        out_name = f"{prefix}-{verse_num:03d}.json"
         out_file = data_dir / out_name
 
         # Parse one raw file -> JSON
         verse_obj = parser_mod.parse_file(src)
-        validate_minimal(verse_obj, out_name)
+        validate_minimal(verse_obj, f"{prefix}-{verse_num:03d}")
 
         # Normalize metadata
         verse_obj.setdefault("id", f"{COLLECTION}/{verse_num:03d}")
@@ -281,10 +291,21 @@ def main():
     # Rebuild index & manifest from actual data_dir (only if we wrote changes)
     if not args.dry_run:
         items = []
-        for jp in sorted(data_dir.glob("verse-*.json")):
-            m = re.search(r"verse-(\d{3})\.json$", jp.name)
+        # Look for both verse-*.json and name-*.json
+        for jp in sorted(data_dir.glob("*-*.json")):
+            m = VERSE_RE.search(jp.name)
             if m:
-                items.append({"file": jp.name, "verse": int(m.group(1))})
+                item_type = m.group(1).lower() # "verse" or "name"
+                item_num = int(m.group(2))
+                item = {"file": jp.name, "type": item_type, "id": item_num}
+                # For backwards compatibility with the UI, ensure 'verse' or 'nama' key exists.
+                if item_type == "verse":
+                    item["verse"] = item_num
+                else: # it's a 'name'
+                    item["nama"] = item_num
+                items.append(item)
+        # Sort by type ('verse' before 'name') and then by id
+        items.sort(key=lambda x: (x["type"] == 'name', x["id"]))
 
         index_obj = {"collection": COLLECTION, "count": len(items), "items": items}
         manifest_obj = {

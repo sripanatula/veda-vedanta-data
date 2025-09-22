@@ -320,6 +320,11 @@
       "sha256": "916793faefae6427ace40234613ff2c942fbfd20427c5f27f24c94a2e4b8b8a2",
       "verse": 52,
       "target": "name-052.json"
+    },
+    "name-053.txt": {
+      "sha256": "efa59257badb21d1191fb16a8473f9c1f189d4fbd5a605f761a54272a669bf9d",
+      "verse": 53,
+      "target": "name-053.json"
     }
   }
 }
