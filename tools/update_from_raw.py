@@ -296,6 +296,7 @@ def main():
     # Rebuild index & manifest from actual data_dir (only if we wrote changes)
     if not args.dry_run:
         all_items = []
+        unified_search_index = []
         search_index_items = []
         # Look for both verse-*.json and name-*.json
         for jp in sorted(data_dir.glob("*-*.json")):
@@ -313,9 +314,19 @@ def main():
                     item["epilogue"] = item_num
                 all_items.append(item)
 
-                # If it's a name, add its content to the search index
+                # Add to unified search index
+                content = json.loads(jp.read_text(encoding="utf-8"))
+                search_text = content.get("sa", "").split('\n')[0] # First line of Sanskrit
+                full_content = ' '.join(str(v) for v in content.values() if isinstance(v, str))
+                unified_search_index.append({
+                    "id": item_num,
+                    "type": item_type,
+                    "text": search_text,
+                    "content": full_content
+                })
+
+                # Legacy: If it's a name, add its content to the old search index
                 if item_type == "name":
-                    content = json.loads(jp.read_text(encoding="utf-8"))
                     if "sa" in content:
                         search_item = {"id": item_num, "sa": content["sa"]}
                         if "words" in content: # Check for the new 'words' key
@@ -352,8 +363,8 @@ def main():
         (data_dir / INDEX_NAME).write_text(json.dumps(index_obj, ensure_ascii=False, indent=2), encoding="utf-8")
         (manifests_dir / MANIFEST_NAME).write_text(json.dumps(manifest_obj, ensure_ascii=False, indent=2), encoding="utf-8")
         save_state(state_path, state)
-        # Write search index
-        (data_dir / "search-index.json").write_text(json.dumps(search_index_items, ensure_ascii=False, indent=2), encoding="utf-8")
+        # Write new unified search index, replacing the old one
+        (data_dir / "search-index.json").write_text(json.dumps(unified_search_index, ensure_ascii=False, indent=2), encoding="utf-8")
 
         committed, pushed = git_commit_push(repo_root, GIT_AUTOCOMMIT, GIT_AUTOPUSH)
         if committed:
