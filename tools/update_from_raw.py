@@ -99,7 +99,8 @@ def load_config(repo_root: Path, explicit: Optional[Path]) -> Dict[str, Any]:
 # ---------------------------- Utilities ----------------------------
 
 # This regex now matches "verse-001.txt" and "name-052.txt"
-VERSE_RE = re.compile(r"(verse|name)-(\d+)\.(txt|md|json)$", re.IGNORECASE)
+# and the future "epilogue-001.txt"
+VERSE_RE = re.compile(r"(verse|name|epilogue)-(\d+)\.(txt|md|json)$", re.IGNORECASE)
 
 def sha256_file(p: Path) -> str:
     h = hashlib.sha256()
@@ -271,6 +272,8 @@ def main():
             prefix = raw_match.group(1).lower()
         out_name = f"{prefix}-{verse_num:03d}.json"
         out_file = data_dir / out_name
+        # Also define the path for the raw source copy
+        out_txt_file = out_file.with_suffix('.txt')
 
         # Parse one raw file -> JSON
         verse_obj = parser_mod.parse_file(src)
@@ -284,34 +287,64 @@ def main():
 
         if not args.dry_run:
             out_file.write_text(json.dumps(verse_obj, ensure_ascii=False, indent=2), encoding="utf-8")
+            # Save a copy of the raw source file
+            out_txt_file.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
 
         total_written += 1
         state["files"][rel] = {"sha256": digest, "verse": verse_num, "target": out_name}
 
     # Rebuild index & manifest from actual data_dir (only if we wrote changes)
     if not args.dry_run:
-        items = []
+        all_items = []
+        search_index_items = []
         # Look for both verse-*.json and name-*.json
         for jp in sorted(data_dir.glob("*-*.json")):
             m = VERSE_RE.search(jp.name)
             if m:
-                item_type = m.group(1).lower() # "verse" or "name"
+                item_type = m.group(1).lower() # "verse", "name", or "epilogue"
                 item_num = int(m.group(2))
                 item = {"file": jp.name, "type": item_type, "id": item_num}
                 # For backwards compatibility with the UI, ensure 'verse' or 'nama' key exists.
                 if item_type == "verse":
                     item["verse"] = item_num
-                else: # it's a 'name'
+                elif item_type == "name":
                     item["nama"] = item_num
-                items.append(item)
-        # Sort by type ('verse' before 'name') and then by id
-        items.sort(key=lambda x: (x["type"] == 'name', x["id"]))
+                elif item_type == "epilogue":
+                    item["epilogue"] = item_num
+                all_items.append(item)
 
-        index_obj = {"collection": COLLECTION, "count": len(items), "items": items}
+                # If it's a name, add its content to the search index
+                if item_type == "name":
+                    content = json.loads(jp.read_text(encoding="utf-8"))
+                    if "sa" in content:
+                        search_item = {"id": item_num, "sa": content["sa"]}
+                        if "words" in content: # Check for the new 'words' key
+                            search_item["words"] = content["words"]
+                        search_index_items.append(search_item)
+
+        # Sort by type ('verse' before 'name' before 'epilogue') and then by id
+        type_order = {"verse": 0, "name": 1, "epilogue": 2}
+        all_items.sort(key=lambda x: (type_order.get(x["type"], 99), x["id"]))
+
+        # New structured index with sections
+        sections = {
+            "purva_peethika": {"label": "Purva Peethika (Introduction)", "items": []},
+            "namas": {"label": "Sahasranama (The 1000 Names)", "items": []},
+            "uttara_peethika": {"label": "Uttara Peethika (Conclusion)", "items": []}
+        }
+        for item in all_items:
+            if item["type"] == "verse":
+                sections["purva_peethika"]["items"].append(item)
+            elif item["type"] == "name":
+                sections["namas"]["items"].append(item)
+            elif item["type"] == "epilogue":
+                sections["uttara_peethika"]["items"].append(item)
+
+        index_obj = {"collection": COLLECTION, "count": len(all_items), "sections": sections}
         manifest_obj = {
             "base": f"/{BASE}",
-            "total": len(items),
-            "schema_version": "1.0",
+            "total": len(all_items),
+            "schema_version": "2.0", # Bump version to reflect new structure
             "last_updated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         }
 
@@ -319,6 +352,8 @@ def main():
         (data_dir / INDEX_NAME).write_text(json.dumps(index_obj, ensure_ascii=False, indent=2), encoding="utf-8")
         (manifests_dir / MANIFEST_NAME).write_text(json.dumps(manifest_obj, ensure_ascii=False, indent=2), encoding="utf-8")
         save_state(state_path, state)
+        # Write search index
+        (data_dir / "search-index.json").write_text(json.dumps(search_index_items, ensure_ascii=False, indent=2), encoding="utf-8")
 
         committed, pushed = git_commit_push(repo_root, GIT_AUTOCOMMIT, GIT_AUTOPUSH)
         if committed:
